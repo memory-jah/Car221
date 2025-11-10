@@ -10,7 +10,7 @@ export default function SignupScreen() {
 
   const signup = async () => {
     try {
-      const res = await api.post('/auth/signup', { name, email, password });
+      const res = await signup({ name, email, password });
       setMessage('✅ Signup successful');
     } catch (err) {
       setMessage('❌ Signup failed');
