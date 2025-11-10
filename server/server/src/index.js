@@ -8,7 +8,8 @@ import bookings from './routes/bookings.js';
 import payments from './routes/payments.js';
 import webhooks from './routes/webhooks.js';
 import auth from './routes/auth.js';
-import kyc from './routes/kyc.js';   // <<< ADDED
+import kyc from './routes/kyc.js';
+import wallet from './routes/wallet.js';   // <<< ADDED
 
 const app = express();
 app.use(cors());
@@ -20,7 +21,8 @@ app.use('/api/vehicles', vehicles);
 app.use('/api/bookings', bookings);
 app.use('/api/payments', payments);
 app.use('/api/webhooks', webhooks);
-app.use('/api/kyc', kyc);   // <<< ADDED
+app.use('/api/kyc', kyc);
+app.use('/api/wallet', wallet);    // <<< ADDED
 
 app.get('/', (req, res) => {
   res.json({ ok: true });
