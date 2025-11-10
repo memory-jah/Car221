@@ -57,10 +57,10 @@ export async function login(payload) {
   return res.json();
 }
 
-// bookings list (for "My bookings" screen)
+// bookings
 export async function listBookings({ renter_id } = {}) {
   const qs = renter_id ? `?renter_id=${encodeURIComponent(renter_id)}` : '';
   const res = await fetch(`${API_BASE}/api/bookings${qs}`);
   if (!res.ok) throw new Error('Failed to load bookings');
-  return res.json(); // { bookings: [...] }
+  return res.json();
 }
