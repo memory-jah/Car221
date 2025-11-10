@@ -1,9 +1,10 @@
+// server/mobile/screens/VehiclesScreen.js
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
 import { listVehicles } from '../services/api';
 import CarCard from '../components/CarCard';
 
-export default function VehiclesScreen() {
+export default function VehiclesScreen({ onSelect }) {
   const [loading, setLoading] = useState(true);
   const [vehicles, setVehicles] = useState([]);
   const [error, setError] = useState('');
@@ -25,17 +26,38 @@ export default function VehiclesScreen() {
   useEffect(() => { load(); }, []);
   const onRefresh = () => { setRefreshing(true); load(); };
 
-  if (loading) return <View style={{ flex:1, justifyContent:'center' }}><ActivityIndicator /></View>;
-  if (error) return <View style={{ padding:16 }}><Text style={{ color:'red' }}>{error}</Text></View>;
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={{ padding: 16 }}>
+        <Text style={{ color: 'red' }}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1 }}>
       <FlatList
         data={vehicles}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <CarCard item={item} onPress={() => {}} />}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-        ListEmptyComponent={<Text style={{ textAlign:'center', marginTop:20 }}>No cars yet.</Text>}
+        renderItem={({ item }) => (
+          <CarCard item={item} onPress={() => onSelect && onSelect(item)} />
+        )}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+        ListEmptyComponent={
+          <Text style={{ textAlign: 'center', marginTop: 20 }}>
+            No cars yet.
+          </Text>
+        }
       />
     </View>
   );
