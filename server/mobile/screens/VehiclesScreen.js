@@ -23,10 +23,7 @@ export default function VehiclesScreen({ onSelect }) {
     }
   };
 
-  useEffect(() => { 
-  const unsub = navigation?.addListener('focus', load);
-  return unsub;
-}, [navigation]);
+  useEffect(() => { load(); }, []);
   const onRefresh = () => { setRefreshing(true); load(); };
 
   if (loading) {
