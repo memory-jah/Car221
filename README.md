@@ -30,3 +30,20 @@ Body:
 }
 
 
+### Get current user
+`GET /api/auth/me`
+
+Headers:
+
+---
+
+## Project structure
+
+---
+
+## TODO (next steps)
+
+- Wave payment checkout
+- Host mode screens
+- Vehicle image uploads
+- KYC/Identity
