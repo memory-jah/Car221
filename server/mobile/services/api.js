@@ -64,3 +64,21 @@ export async function listBookings({ renter_id } = {}) {
   if (!res.ok) throw new Error('Failed to load bookings');
   return res.json();
 }
+
+// KYC submit
+export async function submitKyc({ user_id, id_type, id_number, photo_url }) {
+  const res = await fetch(`${API_BASE}/api/kyc/submit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id, id_type, id_number, photo_url })
+  });
+  if (!res.ok) throw new Error('Failed to submit KYC');
+  return res.json();
+}
+
+// KYC status
+export async function getKycStatus(user_id) {
+  const res = await fetch(`${API_BASE}/api/kyc/status?user_id=${encodeURIComponent(user_id)}`);
+  if (!res.ok) throw new Error('Failed to get KYC status');
+  return res.json();
+}
