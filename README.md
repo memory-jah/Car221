@@ -13,11 +13,16 @@ Email + password auth (in-memory) is implemented.
 
 Body:
 ```json
-### Login
-`POST /api/auth/login`
+### Signup
+`POST /api/auth/signup`
 
 Body:
 ```json
+{
+  "name": "Mame Mor",
+  "email": "test@cars221.sn",
+  "password": "123456"
+}
 {
   "email": "test@cars221.sn",
   "password": "123456"
