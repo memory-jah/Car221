@@ -1,9 +1,3 @@
-// Super simple in-memory store (temporary)
-export const db = {
-  vehicles: [],
-  bookings: [],
-  webhookEvents: []
-};
 
 // Seed example vehicles
 export function seed() {
