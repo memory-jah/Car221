@@ -9,7 +9,7 @@ export default function LoginScreen() {
 
   const login = async () => {
     try {
-      const res = await api.post('/auth/login', { email, password });
+      const res = await login({ email, password });
       setMessage('✅ Login successful');
     } catch (err) {
       setMessage('❌ Login failed');
