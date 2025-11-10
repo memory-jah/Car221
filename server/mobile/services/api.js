@@ -35,6 +35,7 @@ export async function createVehicle(payload) {
   if (!res.ok) throw new Error('Failed to add vehicle');
   return res.json();
 }
+
 // auth
 export async function signup(payload) {
   const res = await fetch(`${API_BASE}/api/auth/signup`, {
@@ -54,4 +55,12 @@ export async function login(payload) {
   });
   if (!res.ok) throw new Error('Failed login');
   return res.json();
+}
+
+// bookings list (for "My bookings" screen)
+export async function listBookings({ renter_id } = {}) {
+  const qs = renter_id ? `?renter_id=${encodeURIComponent(renter_id)}` : '';
+  const res = await fetch(`${API_BASE}/api/bookings${qs}`);
+  if (!res.ok) throw new Error('Failed to load bookings');
+  return res.json(); // { bookings: [...] }
 }
