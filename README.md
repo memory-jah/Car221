@@ -1,7 +1,15 @@
 # Car221
 Carrental
 
+### Login
+`POST /api/auth/login`
 
+Body:
+```json
+{
+  "email": "test@cars221.sn",
+  "password": "123456"
+}
 
 
 
