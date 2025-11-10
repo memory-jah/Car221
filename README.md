@@ -1,5 +1,4 @@
 # Cars221
-credentiel
 
 Peer-to-peer car rental marketplace for Senegal.
 
@@ -20,8 +19,9 @@ Body:
   "password": "123456"
 }
 
-### Login
-`POST /api/auth/login`
+Login
+
+POST /api/auth/login
 
 Body:
 ```json
@@ -30,17 +30,26 @@ Body:
   "password": "123456"
 }
 
+Get current user
 
-### Get current user
-`GET /api/auth/me`
+GET /api/auth/me
 
 Headers:
+Authorization: Bearer <token>
 
----
+Project structure
+server/
+  src/
+    routes/
+    db.js
+    index.js
 
-## Project structure
-
----
+mobile/
+  App.js
+  components/
+  services/
+  
+  ---
 
 ## TODO (next steps)
 
