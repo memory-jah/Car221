@@ -1,25 +1,6 @@
 # Car221
 Carrental
 
-### Login
-`POST /api/auth/login`
-
-Body:
-```json
-{
-  "email": "test@cars221.sn",
-  "password": "123456"
-}
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -32,6 +13,15 @@ Email + password auth (in-memory) is implemented.
 
 Body:
 ```json
+### Login
+`POST /api/auth/login`
+
+Body:
+```json
+{
+  "email": "test@cars221.sn",
+  "password": "123456"
+}
 {
   "name": "Mame Mor",
   "email": "test@cars221.sn",
