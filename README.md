@@ -28,3 +28,14 @@ Body:
   "email": "test@cars221.sn",
   "password": "123456"
 }
+Authorization: Bearer <token>
+server/
+  src/
+    routes/
+    db.js
+    index.js
+
+mobile/
+  App.js
+  components/
+  services/
