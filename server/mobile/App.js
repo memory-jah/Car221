@@ -1,66 +1,74 @@
-import { API_BASE } from '../constants_config';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import LoginScreen from './screens/LoginScreen';
+import SignupScreen from './screens/SignupScreen';
+import VehiclesScreen from './screens/VehiclesScreen';
+import CarDetailsScreen from './screens/CarDetailsScreen';
+import HostScreen from './screens/HostScreen';
 
-export async function listVehicles() {
-  const res = await fetch(`${API_BASE}/api/vehicles`);
-  if (!res.ok) throw new Error('Failed to load vehicles');
-  return res.json();
-}
+export default function App() {
+  const [tab, setTab] = useState('login');   // 'login' | 'signup' | 'vehicles' | 'details' | 'host'
+  const [token, setToken] = useState(null);
+  const [me, setMe] = useState(null);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
 
-export async function createBooking(payload) {
-  const res = await fetch(`${API_BASE}/api/bookings`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) throw new Error('Failed to create booking');
-  return res.json();
-}
+  const onAuthed = (t, user) => {
+    setToken(t);
+    setMe(user);
+    setTab('vehicles');
+  };
 
-export async function createWaveCheckout({ booking_id, amount_fcfa }) {
-  const res = await fetch(`${API_BASE}/api/payments/wave/checkout`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ booking_id, amount_fcfa })
-  });
-  if (!res.ok) throw new Error('Failed to start checkout');
-  return res.json();
-}
+  const openDetails = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setTab('details');
+  };
 
-export async function createVehicle(payload) {
-  const res = await fetch(`${API_BASE}/api/vehicles`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) throw new Error('Failed to add vehicle');
-  return res.json();
-}
+  const backFromDetails = () => {
+    setSelectedVehicle(null);
+    setTab('vehicles');
+  };
 
-// auth
-export async function signup(payload) {
-  const res = await fetch(`${API_BASE}/api/auth/signup`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) throw new Error('Failed signup');
-  return res.json();
-}
+  return (
+    <View style={{ flex: 1, paddingTop: 60 }}>
+      {/* tabs */}
+      <View style={{ flexDirection: 'row', gap: 12, paddingHorizontal: 16, marginBottom: 10, flexWrap:'wrap' }}>
+        {!token && (
+          <>
+            <TouchableOpacity onPress={() => setTab('login')} style={{ paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 6 }}>
+              <Text style={{ fontWeight: tab==='login' ? '700' : '400' }}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setTab('signup')} style={{ paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 6 }}>
+              <Text style={{ fontWeight: tab==='signup' ? '700' : '400' }}>Sign up</Text>
+            </TouchableOpacity>
+          </>
+        )}
+        {token && (
+          <>
+            <TouchableOpacity onPress={() => setTab('vehicles')} style={{ paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 6 }}>
+              <Text style={{ fontWeight: tab==='vehicles' ? '700' : '400' }}>Vehicles</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setTab('host')} style={{ paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 6 }}>
+              <Text style={{ fontWeight: tab==='host' ? '700' : '400' }}>Host</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => { setToken(null); setMe(null); setSelectedVehicle(null); setTab('login'); }} style={{ paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 6 }}>
+              <Text>Logout</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
 
-export async function login(payload) {
-  const res = await fetch(`${API_BASE}/api/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  if (!res.ok) throw new Error('Failed login');
-  return res.json();
-}
-
-// bookings list (for "My bookings" screen)
-export async function listBookings({ renter_id } = {}) {
-  const qs = renter_id ? `?renter_id=${encodeURIComponent(renter_id)}` : '';
-  const res = await fetch(`${API_BASE}/api/bookings${qs}`);
-  if (!res.ok) throw new Error('Failed to load bookings');
-  return res.json(); // { bookings: [...] }
+      {/* screens */}
+      {!token && tab === 'login' && <LoginScreen onAuthed={onAuthed} />}
+      {!token && tab === 'signup' && <SignupScreen onAuthed={onAuthed} />}
+      {token && tab === 'vehicles' && <VehiclesScreen onSelect={openDetails} />}
+      {token && tab === 'details' && (
+        <CarDetailsScreen
+          vehicle={selectedVehicle}
+          onBack={backFromDetails}
+          user={me}               // <<< this is the important addition
+        />
+      )}
+      {token && tab === 'host' && <HostScreen />}
+    </View>
+  );
 }
