@@ -29,3 +29,15 @@ export function seed() {
   );
 }
 seed();
+
+export const db = {
+  users: [],          // <— add this
+  vehicles: [],
+  bookings: [],
+  webhookEvents: []
+};
+
+// OPTIONAL helper:
+export function findUserByEmail(email) {
+  return db.users.find(u => u.email?.toLowerCase() === String(email).toLowerCase());
+}
