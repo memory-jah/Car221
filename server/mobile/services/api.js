@@ -25,3 +25,13 @@ export async function createWaveCheckout({ booking_id, amount_fcfa }) {
   if (!res.ok) throw new Error('Failed to start checkout');
   return res.json();
 }
+
+export async function createVehicle(payload) {
+  const res = await fetch(`${API_BASE}/api/vehicles`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed to add vehicle');
+  return res.json();
+}
