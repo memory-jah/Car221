@@ -82,3 +82,30 @@ export async function getKycStatus(user_id) {
   if (!res.ok) throw new Error('Failed to get KYC status');
   return res.json();
 }
+
+/* -------------------- WALLET HELPERS -------------------- */
+
+// balance
+export async function getWalletBalance(user_id) {
+  const res = await fetch(`${API_BASE}/api/wallet/balance?user_id=${encodeURIComponent(user_id)}`);
+  if (!res.ok) throw new Error('Failed to load balance');
+  return res.json(); // { balance_fcfa }
+}
+
+// transactions
+export async function getWalletTransactions(user_id) {
+  const res = await fetch(`${API_BASE}/api/wallet/transactions?user_id=${encodeURIComponent(user_id)}`);
+  if (!res.ok) throw new Error('Failed to load transactions');
+  return res.json(); // { transactions: [...] }
+}
+
+// withdraw (6% fee handled server-side)
+export async function withdrawWallet({ user_id, amount_fcfa, dest = 'wave_visa', card_last4 }) {
+  const res = await fetch(`${API_BASE}/api/wallet/withdraw`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ user_id, amount_fcfa, dest, card_last4 })
+  });
+  if (!res.ok) throw new Error('Failed to withdraw');
+  return res.json(); // { ok, new_balance_fcfa, fee_fcfa, payout_fcfa }
+}
