@@ -6,8 +6,10 @@ import VehiclesScreen from './screens/VehiclesScreen';
 import CarDetailsScreen from './screens/CarDetailsScreen';
 import HostScreen from './screens/HostScreen';
 import MyBookingsScreen from './screens/MyBookingsScreen';
+import KycScreen from './screens/KycScreen'; // <<< ADDED
 
 export default function App() {
+  // tabs: 'login' | 'signup' | 'kyc' | 'vehicles' | 'details' | 'host' | 'bookings'
   const [tab, setTab] = useState('login');
   const [token, setToken] = useState(null);
   const [me, setMe] = useState(null);
@@ -16,7 +18,12 @@ export default function App() {
   const onAuthed = (tokenValue, user) => {
     setToken(tokenValue);
     setMe(user);
-    setTab('vehicles');
+    // Force KYC if not verified
+    if (user?.kyc_status !== 'verified') {
+      setTab('kyc');
+    } else {
+      setTab('vehicles');
+    }
   };
 
   const openDetails = (vehicle) => {
@@ -29,12 +36,19 @@ export default function App() {
     setTab('vehicles');
   };
 
+  const logout = () => {
+    setToken(null);
+    setMe(null);
+    setSelectedVehicle(null);
+    setTab('login');
+  };
+
+  const isKycGate = token && tab === 'kyc';
+
   return (
     <View style={{ flex: 1, paddingTop: 60 }}>
-      
       {/* Tabs */}
       <View style={{ flexDirection: 'row', gap: 12, paddingHorizontal: 16, marginBottom: 10, flexWrap:'wrap' }}>
-        
         {!token && (
           <>
             <TouchableOpacity onPress={() => setTab('login')} style={{ padding:8, borderWidth:1, borderRadius:6 }}>
@@ -46,7 +60,7 @@ export default function App() {
           </>
         )}
 
-        {token && (
+        {token && !isKycGate && (
           <>
             <TouchableOpacity onPress={() => setTab('vehicles')} style={{ padding:8, borderWidth:1, borderRadius:6 }}>
               <Text style={{ fontWeight: tab==='vehicles' ? '700' : '400' }}>Vehicles</Text>
@@ -60,7 +74,18 @@ export default function App() {
               <Text style={{ fontWeight: tab==='host' ? '700' : '400' }}>Host</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => { setToken(null); setMe(null); setSelectedVehicle(null); setTab('login'); }} style={{ padding:8, borderWidth:1, borderRadius:6 }}>
+            <TouchableOpacity onPress={logout} style={{ padding:8, borderWidth:1, borderRadius:6 }}>
+              <Text>Logout</Text>
+            </TouchableOpacity>
+          </>
+        )}
+
+        {token && isKycGate && (
+          <>
+            <View style={{ padding:8, borderWidth:1, borderRadius:6, backgroundColor:'#eee' }}>
+              <Text style={{ fontWeight:'700' }}>KYC Required</Text>
+            </View>
+            <TouchableOpacity onPress={logout} style={{ padding:8, borderWidth:1, borderRadius:6 }}>
               <Text>Logout</Text>
             </TouchableOpacity>
           </>
@@ -70,11 +95,25 @@ export default function App() {
       {/* Screens */}
       {!token && tab === 'login' && <LoginScreen onAuthed={onAuthed} />}
       {!token && tab === 'signup' && <SignupScreen onAuthed={onAuthed} />}
-      {token && tab === 'vehicles' && <VehiclesScreen key={Math.random()} onSelect={openDetails} />}
-      {token && tab === 'details' && <CarDetailsScreen vehicle={selectedVehicle} onBack={backFromDetails} user={me} />}
-      {token && tab === 'host' && <HostScreen />}
-      {token && tab === 'bookings' && <MyBookingsScreen renterId={me?.id} />}
 
+      {token && tab === 'kyc' && (
+        <KycScreen
+          user={me}
+          onDone={() => setTab('vehicles')} // when status is verified
+        />
+      )}
+
+      {token && tab === 'vehicles' && (
+        <VehiclesScreen key={tab + Date.now()} onSelect={openDetails} />
+      )}
+
+      {token && tab === 'details' && (
+        <CarDetailsScreen vehicle={selectedVehicle} onBack={backFromDetails} user={me} />
+      )}
+
+      {token && tab === 'host' && <HostScreen />}
+
+      {token && tab === 'bookings' && <MyBookingsScreen renterId={me?.id} />}
     </View>
   );
 }
