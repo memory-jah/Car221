@@ -35,3 +35,23 @@ export async function createVehicle(payload) {
   if (!res.ok) throw new Error('Failed to add vehicle');
   return res.json();
 }
+// auth
+export async function signup(payload) {
+  const res = await fetch(`${API_BASE}/api/auth/signup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed signup');
+  return res.json();
+}
+
+export async function login(payload) {
+  const res = await fetch(`${API_BASE}/api/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  if (!res.ok) throw new Error('Failed login');
+  return res.json();
+}
