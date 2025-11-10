@@ -111,7 +111,7 @@ export default function App() {
         <CarDetailsScreen vehicle={selectedVehicle} onBack={backFromDetails} user={me} />
       )}
 
-      {token && tab === 'host' && <HostScreen />}
+      {token && tab === 'host' && <HostScreen user={me} />}
 
       {token && tab === 'bookings' && <MyBookingsScreen renterId={me?.id} />}
     </View>
