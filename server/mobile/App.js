@@ -70,7 +70,7 @@ export default function App() {
       {/* Screens */}
       {!token && tab === 'login' && <LoginScreen onAuthed={onAuthed} />}
       {!token && tab === 'signup' && <SignupScreen onAuthed={onAuthed} />}
-      {token && tab === 'vehicles' && <VehiclesScreen onSelect={openDetails} />}
+      {token && tab === 'vehicles' && <VehiclesScreen key={Math.random()} onSelect={openDetails} />}
       {token && tab === 'details' && <CarDetailsScreen vehicle={selectedVehicle} onBack={backFromDetails} user={me} />}
       {token && tab === 'host' && <HostScreen />}
       {token && tab === 'bookings' && <MyBookingsScreen renterId={me?.id} />}
