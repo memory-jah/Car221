@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Button, Alert, Linking } from 'react-native';
 import { createBooking, createWaveCheckout } from '../services/api';
 
-export default function CarDetailsScreen({ vehicle, onBack }) {
+export default function CarDetailsScreen({ vehicle, onBack, user }) {
   const [busy, setBusy] = useState(false);
   const total = (vehicle?.price_day_fcfa || 0) + (vehicle?.deposit_fcfa || 0);
 
@@ -11,19 +11,23 @@ export default function CarDetailsScreen({ vehicle, onBack }) {
       setBusy(true);
       // simple 1-day booking demo
       const start = new Date();
-      const end = new Date(Date.now() + 24*3600*1000);
+      const end = new Date(Date.now() + 24 * 3600 * 1000);
 
       const booking = await createBooking({
         vehicle_id: vehicle.id,
-        renter_id: 'demo-renter',
-        start_date: start.toISOString().slice(0,10),
-        end_date: end.toISOString().slice(0,10),
+        renter_id: user?.id || 'demo-renter',    // <-- use logged-in user
+        start_date: start.toISOString().slice(0, 10),
+        end_date: end.toISOString().slice(0, 10),
         price_day_fcfa: vehicle.price_day_fcfa,
         deposit_fcfa: vehicle.deposit_fcfa || 0,
         total_fcfa: total
       });
 
-      const pay = await createWaveCheckout({ booking_id: booking.id, amount_fcfa: booking.total_fcfa });
+      const pay = await createWaveCheckout({
+        booking_id: booking.id,
+        amount_fcfa: booking.total_fcfa
+      });
+
       if (pay.checkout_url) {
         Linking.openURL(pay.checkout_url);
       } else {
@@ -36,7 +40,13 @@ export default function CarDetailsScreen({ vehicle, onBack }) {
     }
   };
 
-  if (!vehicle) return <View style={{ padding: 16 }}><Text>No vehicle selected.</Text></View>;
+  if (!vehicle) {
+    return (
+      <View style={{ padding: 16 }}>
+        <Text>No vehicle selected.</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
