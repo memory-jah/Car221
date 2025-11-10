@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { signup } from '../services/api';
 
-export default function SignupScreen() {
+export default function SignupScreen({ onAuthed }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const signup = async () => {
+  const signupFn = async () => {
     try {
       const res = await signup({ name, email, password });
       setMessage('✅ Signup successful');
+      onAuthed && onAuthed(res.token, res.user); // notify parent
     } catch (err) {
       setMessage('❌ Signup failed');
     }
@@ -47,7 +48,7 @@ export default function SignupScreen() {
       />
 
       <TouchableOpacity
-        onPress={signup}
+        onPress={signupFn}
         style={{ backgroundColor: 'black', padding: 14, borderRadius: 8 }}
       >
         <Text style={{ color: 'white', textAlign: 'center', fontWeight: '600' }}>
