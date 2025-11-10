@@ -7,12 +7,14 @@ import vehicles from './routes/vehicles.js';
 import bookings from './routes/bookings.js';
 import payments from './routes/payments.js';
 import webhooks from './routes/webhooks.js';
+import auth from './routes/auth.js';
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 app.use(morgan('dev'));
 
+app.use('/api/auth', auth);
 app.use('/api/vehicles', vehicles);
 app.use('/api/bookings', bookings);
 app.use('/api/payments', payments);
