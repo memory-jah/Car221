@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import api from '../services/api';
+import { signup } from '../services/api';
 
 export default function SignupScreen() {
   const [name, setName] = useState('');
