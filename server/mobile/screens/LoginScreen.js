@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { login } from '../services/api';
 
-export default function LoginScreen() {
+export default function LoginScreen({ onAuthed }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const login = async () => {
+  const loginFn = async () => {
     try {
       const res = await login({ email, password });
       setMessage('✅ Login successful');
+
+      onAuthed && onAuthed(res.token, res.user);
     } catch (err) {
       setMessage('❌ Login failed');
     }
@@ -39,7 +41,7 @@ export default function LoginScreen() {
       />
 
       <TouchableOpacity
-        onPress={login}
+        onPress={loginFn}
         style={{
           backgroundColor: 'black',
           padding: 14,
