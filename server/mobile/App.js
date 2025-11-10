@@ -4,9 +4,10 @@ import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import VehiclesScreen from './screens/VehiclesScreen';
 import CarDetailsScreen from './screens/CarDetailsScreen';
+import HostScreen from './screens/HostScreen';
 
 export default function App() {
-  const [tab, setTab] = useState('login');   // 'login' | 'signup' | 'vehicles' | 'details'
+  const [tab, setTab] = useState('login');   // 'login' | 'signup' | 'vehicles' | 'details' | 'host'
   const [token, setToken] = useState(null);
   const [me, setMe] = useState(null);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
@@ -29,7 +30,7 @@ export default function App() {
 
   return (
     <View style={{ flex: 1, paddingTop: 60 }}>
-      {/* simple tabs */}
+      {/* tabs */}
       <View style={{ flexDirection: 'row', gap: 12, paddingHorizontal: 16, marginBottom: 10, flexWrap:'wrap' }}>
         {!token && (
           <>
@@ -46,6 +47,9 @@ export default function App() {
             <TouchableOpacity onPress={() => setTab('vehicles')} style={{ paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 6 }}>
               <Text style={{ fontWeight: tab==='vehicles' ? '700' : '400' }}>Vehicles</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => setTab('host')} style={{ paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 6 }}>
+              <Text style={{ fontWeight: tab==='host' ? '700' : '400' }}>Host</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => { setToken(null); setMe(null); setSelectedVehicle(null); setTab('login'); }} style={{ paddingVertical: 8, paddingHorizontal: 12, borderWidth: 1, borderRadius: 6 }}>
               <Text>Logout</Text>
             </TouchableOpacity>
@@ -58,6 +62,7 @@ export default function App() {
       {!token && tab === 'signup' && <SignupScreen onAuthed={onAuthed} />}
       {token && tab === 'vehicles' && <VehiclesScreen onSelect={openDetails} />}
       {token && tab === 'details' && <CarDetailsScreen vehicle={selectedVehicle} onBack={backFromDetails} />}
+      {token && tab === 'host' && <HostScreen />}
     </View>
   );
 }
